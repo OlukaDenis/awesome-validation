@@ -1,26 +1,20 @@
-apply plugin: "com.android.library"
-//apply plugin: "com.getkeepsafe.dexcount"
-//apply from: "gradle/script/coverage.gradle"
-//apply from: "gradle/script/publish.gradle"
+plugins {
+    id 'com.android.library'
+    id 'maven-publish'
+}
+
+def keystorePropertiesFile = rootProject.file("secrets.properties")
+def keystoreProperties = new Properties()
+keystoreProperties.load(new FileInputStream(keystorePropertiesFile))
 
 android {
-//    compileSdkVersion rootProject.ext.compileSdkVersion
-//    buildToolsVersion rootProject.ext.buildToolsVersion
-//
-//    defaultConfig {
-//        minSdkVersion rootProject.ext.minSdk
-//        targetSdkVersion rootProject.ext.targetSdk
-//        versionCode rootProject.ext.versionCode
-//        versionName rootProject.ext.versionName
-//        defaultPublishConfig "release"
-//        consumerProguardFiles "proguard-rules.pro"
-//    }
     compileSdk 34
     testOptions.unitTests.includeAndroidResources = true
 
     defaultConfig {
         minSdk 21
         targetSdk 34
+        defaultPublishConfig "release"
 
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
         consumerProguardFiles "consumer-rules.pro"
@@ -62,14 +56,6 @@ android {
     }
 }
 
-//ext {
-//    guavaVersion = '30.1.1-android'
-//    junitVersion = "4.13.1"
-//    mockitoVersion = '3.7.0'
-//    easymockVersion = "4.2"
-//    powermockVersion = '2.0.9'
-//}
-
 dependencies {
     coreLibraryDesugaring 'com.android.tools:desugar_jdk_libs:1.2.2'
 
@@ -92,5 +78,39 @@ dependencies {
 configurations.all {
     resolutionStrategy {
         force "junit:junit:4.13.1"
+    }
+}
+
+task androidSourcesJar(type: Jar) {
+    archiveClassifier.set("sources")
+    from android.sourceSets.main.java.sourceFiles
+}
+
+afterEvaluate {
+    publishing {
+        publications {
+            // Creates a publication named - release
+            release(MavenPublication) {
+                artifact(bundleReleaseAar)
+                artifact(androidSourcesJar)
+                groupId 'com.interswitchug'
+                artifactId 'awesome-validation'
+                version '0.0.1'
+            }
+        }
+
+        repositories {
+            maven {
+                name 'MobileDevOps'
+                url keystoreProperties['repositoryUrl']
+                credentials {
+                    username keystoreProperties['userName']
+                    password keystoreProperties['azureMavenAccessToken']
+                }
+                authentication {
+                    basic(BasicAuthentication)
+                }
+            }
+        }
     }
 }

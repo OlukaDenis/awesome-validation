@@ -21,4 +21,5 @@ dependencyResolutionManagement {
 
 rootProject.name = "AwesomeValidation"
 include(":app")
+include("awesomevalidation")
  
