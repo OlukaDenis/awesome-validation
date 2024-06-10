@@ -8,6 +8,7 @@ def keystoreProperties = new Properties()
 keystoreProperties.load(new FileInputStream(keystorePropertiesFile))
 
 android {
+    namespace 'com.basgeekball.awesomevalidation'
     compileSdk 34
     testOptions.unitTests.includeAndroidResources = true
 
@@ -61,7 +62,7 @@ dependencies {
 
     implementation "com.google.android.material:material:1.3.0"
     implementation "androidx.constraintlayout:constraintlayout:2.0.4"
-    api("com.google.guava:guava:30.1.1-android") {
+    implementation("com.google.guava:guava:30.1.1-android") {
         exclude module: "jsr305"
     }
     // Streams
@@ -95,7 +96,7 @@ afterEvaluate {
                 artifact(androidSourcesJar)
                 groupId 'com.interswitchug'
                 artifactId 'awesome-validation'
-                version '0.0.1'
+                version '0.0.3'
             }
         }
 

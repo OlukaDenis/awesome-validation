@@ -150,10 +150,10 @@ public abstract class Validator {
             List<ValidationHolder> filtered = getmValidationHolderList().stream()
                     .filter(item -> item.getTextInputLayout().getId() == view.getId())
                     .collect(Collectors.toList());
-            Log.d(TAG, "Filtered: " + filtered);
+            Log.d(TAG, "Validations to remove:: " + filtered);
 
             if (!filtered.isEmpty()) {
-                mValidationHolderList.remove(filtered.get(0));
+                filtered.forEach(item -> mValidationHolderList.remove(item));
             }
         }
     }
@@ -163,16 +163,16 @@ public abstract class Validator {
             List<ValidationHolder> filtered = getmValidationHolderList().stream()
                     .filter(item -> item.getTextInputLayout().getId() == view.getId() && item.getErrMsg().equals(errorMessage))
                     .collect(Collectors.toList());
-            Log.d(TAG, "Filter: " + filtered);
+            Log.d(TAG, "Validations to remove: " + filtered);
 
             if (!filtered.isEmpty()) {
-                mValidationHolderList.remove(filtered.get(0));
+                filtered.forEach(item -> mValidationHolderList.remove(item));
             }
         }
     }
 
     private void add(ValidationHolder validationHolder) {
-        Log.i(TAG, "Adding: " + validationHolder.getTextInputLayout().getHint());
+//        Log.i(TAG, "Adding: " + validationHolder.getTextInputLayout().getHint());
         mValidationHolderList.add(validationHolder);
     }
 
@@ -275,13 +275,9 @@ public abstract class Validator {
     }
 
     public void reset() {
-        Log.i(TAG, "reset: Clearing list: " + getmValidationHolderList().size());
+//        Log.i(TAG, "reset: Clearing list: " + getmValidationHolderList().size());
         halt();
         mValidationHolderList.clear();
-//        for (ValidationHolder holder: getmValidationHolderList()) {
-//            Log.i(TAG, "Removing: " + holder.getErrMsg());
-//            mValidationHolderList.remove(holder);
-//        }
-        Log.i(TAG, "reset: After Clearing list: " + getmValidationHolderList().size());
+//        Log.i(TAG, "reset: After Clearing list: " + getmValidationHolderList().size());
     }
 }
